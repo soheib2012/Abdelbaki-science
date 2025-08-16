@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>دروس خصوصية عند الأستاذة عبد الباقي</title>
+  <style>
+    :root{
+      --pri:#2e7d32; --pri-2:#43a047; --bg:#f5f7fa; --card:#ffffff; --muted:#6b7280;
+      --danger:#d32f2f; --warn:#ef6c00; --ok:#1b5e20;
+    }
+    html,body{margin:0;padding:0;background:var(--bg);color:#111;font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial}
+    header{background:linear-gradient(135deg,var(--pri),var(--pri-2));color:#fff;padding:20px 16px;text-align:center;position:sticky;top:0;z-index:50}
+    header .title{font-size:20px;margin:8px 0 0}
+    .logo{width:96px;height:96px;object-fit:contain;background:#ffffff22;border-radius:16px;padding:8px;display:inline-block}
+    .wrap{max-width:960px;margin:18px auto;padding:0 12px}
+    .grid{display:grid;gap:12px}
+    @media (min-width:900px){.grid-2{grid-template-columns:1fr 1fr}}
+
+    .card{background:var(--card);border-radius:14px;box-shadow:0 6px 24px #0000000f; padding:14px}
+    h3{margin:6px 0 12px}
+    .muted{color:var(--muted);font-size:14px}
+    label{font-size:14px;color:#111;margin-top:6px;display:block}
+    input,select{width:100%;border:1px solid #e5e7eb;border-radius:10px;padding:10px;margin-top:6px;background:#fff}
+    .btn{border:0;border-radius:10px;padding:10px 14px;background:var(--pri);color:#fff;cursor:pointer}
+    .btn.secondary{background:#0ea5e9}
+    .btn.flat{background:#e5e7eb;color:#111}
+    .btn.warn{background:var(--warn)}
+    .btn.danger{background:var(--danger)}
+    .btn.ok{background:var(--ok)}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    table{width:100%;border-collapse:collapse;margin-top:10px;border:1px solid #e5e7eb}
+    th,td{border-top:1px solid #e5e7eb;padding:10px;text-align:center}
+    th{background:#f3f4f6}
+    .pill{padding:4px 8px;border-radius:999px;background:#eef2ff;color:#1e40af;font-size:12px;display:inline-block}
+    .hide{display:none}
+
+    .tabs{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+    .tab{padding:8px 12px;border-radius:999px;background:#e5e7eb;cursor:pointer}
+    .tab.active{background:var(--pri);color:#fff}
+    .search{display:flex;gap:8px}
+    .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .kpi .card{padding:12px;text-align:center}
+    .kpi h4{margin:0;font-size:14px;color:var(--muted)}
+    .kpi .num{font-size:22px;margin-top:6px}
+    .note{background:#fff8e1;color:#8d6e63;border:1px dashed #ffecb3;border-radius:10px;padding:10px;margin-top:8px}
+  </style>
+</head>
+<body>
+  <header>
+    <img class="logo" src="logo.png" alt="شعار"/>
+    <div class="title">📚 دروس خصوصية عند الأستاذة عبد الباقي في مادة العلوم الطبيعية</div>
+    <div class="muted">واجهة مخصصة للجوال – إصدار محلي بدون خادم (يعمل ب‍ localStorage)</div>
+  </header>
+
+  <div class="wrap grid grid-2">
+    <section class="card">
+      <h3>🎓 تسجيل طالب جديد</h3>
+      <label>الاسم الكامل</label>
+      <input id="reg_name" placeholder="مثال: أحمد بن زين"/>
+      <label>رقم الهاتف</label>
+      <input id="reg_phone" type="tel" placeholder="05xxxxxxxx"/>
+      <label>المستوى الدراسي</label>
+      <select id="reg_level">
+        <option value="1AS">أولى ثانوي</option>
+        <option value="2AS">ثانية ثانوي</option>
+        <option value="3AS">ثالثة ثانوي</option>
+      </select>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" onclick="registerStudent()">تسجيل</button>
+        <span class="muted">لن يستطيع الطالب الدخول حتى يتم التفعيل من الإدارة.</span>
+      </div>
+      <div class="note">وعد نجاح: سنساعدك على فهم الدروس جيدًا وتحقيق نتائج عالية 💪</div>
+    </section>
+
+    <section class="card">
+      <h3>👤 دخول الطالب</h3>
+      <label>أدخل رقم هاتفك</label>
+      <input id="stu_login_phone" type="tel" placeholder="05xxxxxxxx"/>
+      <div class="row" style="margin-top:10px">
+        <button class="btn secondary" onclick="studentLogin()">دخول</button>
+      </div>
+      <div id="student_view" class="hide" style="margin-top:12px">
+        <div><b>الاسم:</b> <span id="sv_name"></span></div>
+        <div><b>المستوى:</b> <span id="sv_level" class="pill"></span></div>
+        <div><b>رقم الهاتف:</b> <span id="sv_phone"></span></div>
+        <div><b>عدد الحصص المارة:</b> <span id="sv_sessions" class="pill"></span></div>
+        <div id="sv_due" class="pill hide" style="background:#fff1f2;color:#b91c1c;margin-top:8px">وصلت 8 حصص — يجب الدفع</div>
+        <div style="margin-top:10px">
+          <h4>📅 جدول حصص مستواك</h4>
+          <table>
+            <thead><tr><th>اليوم</th><th>الساعة</th></tr></thead>
+            <tbody id="sv_table"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>🔐 دخول الإدارة</h3>
+      <label>كلمة المرور (science)</label>
+      <input id="adm_pass" type="password" placeholder="science"/>
+      <div class="row" style="margin-top:10px">
+        <button class="btn ok" onclick="adminLogin()">دخول</button>
+        <button class="btn flat" onclick="adminLogout()">خروج</button>
+      </div>
+      <div class="note">نسخة محلية بدون خادم؛ كل البيانات تُحفظ في متصفحك.</div>
+    </section>
+
+    <section id="admin_panel" class="card hide" style="grid-column:1/-1">
+      <div class="tabs">
+        <div class="tab active" data-tab="students" onclick="switchTab(this)">الطلاب</div>
+        <div class="tab" data-tab="schedules" onclick="switchTab(this)">الجداول</div>
+        <div class="tab" data-tab="settings" onclick="switchTab(this)">الإعدادات</div>
+      </div>
+
+      <div class="kpi">
+        <div class="card"><h4>إجمالي الطلاب</h4><div id="k_total" class="num">0</div></div>
+        <div class="card"><h4>مفعّلون</h4><div id="k_active" class="num">0</div></div>
+        <div class="card"><h4>بلغوا 8 حصص</h4><div id="k_due" class="num">0</div></div>
+      </div>
+
+      <div id="tab_students">
+        <div class="row search" style="margin-top:10px">
+          <input id="search_q" placeholder="ابحث بالاسم أو رقم الهاتف" oninput="renderStudents()"/>
+          <select id="filter_level" onchange="renderStudents()">
+            <option value="">كل المستويات</option>
+            <option value="1AS">أولى</option>
+            <option value="2AS">ثانية</option>
+            <option value="3AS">ثالثة</option>
+          </select>
+        </div>
+        <table style="margin-top:10px">
+          <thead>
+            <tr><th>الاسم</th><th>الهاتف</th><th>المستوى</th><th>الحصص</th><th>الحالة</th><th>إجراءات</th></tr>
+          </thead>
+          <tbody id="students_tbody"></tbody>
+        </table>
+        <div class="row" style="margin-top:10px">
+          <button class="btn warn" onclick="passSessionForLevel()">تمرير حصة للمستوى المحدد</button>
+          <select id="pass_level">
+            <option value="1AS">أولى</option>
+            <option value="2AS">ثانية</option>
+            <option value="3AS">ثالثة</option>
+          </select>
+          <button class="btn flat" onclick="resetLevelCounters()">تصفير عدّاد المستوى</button>
+        </div>
+      </div>
+
+      <div id="tab_schedules" class="hide">
+        <div class="row">
+          <select id="sched_level" onchange="renderScheduleEditor()">
+            <option value="1AS">أولى ثانوي</option>
+            <option value="2AS">ثانية ثانوي</option>
+            <option value="3AS">ثالثة ثانوي</option>
+          </select>
+          <button class="btn flat" onclick="copySchedule()">نسخ جدول إلى مستوى آخر</button>
+        </div>
+        <table>
+          <thead><tr><th>اليوم</th><th>الساعة</th><th>إجراء</th></tr></thead>
+          <tbody id="sched_tbody"></tbody>
+        </table>
+        <div class="row" style="margin-top:10px">
+          <input id="new_day" placeholder="اليوم (مثال: السبت)"/>
+          <input id="new_time" placeholder="الساعة (مثال: 10:00 - 11:00)"/>
+          <button class="btn" onclick="addSlot()">إضافة حصة</button>
+        </div>
+      </div>
+
+      <div id="tab_settings" class="hide">
+        <label>سعر الحصة (د.ج)</label>
+        <input id="price_input" type="number" min="0" step="50" placeholder="مثال: 500"/>
+        <div class="row" style="margin-top:10px">
+          <button class="btn" onclick="saveSettings()">حفظ الإعدادات</button>
+          <button class="btn danger" onclick="hardReset()">مسح كل البيانات (تحذير)</button>
+        </div>
+        <div class="muted" style="margin-top:6px">يظهر تنبيه الدفع تلقائيًا عند وصول الطالب إلى 8 حصص.</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const LS_KEY = "doroos_db_v2";
+    const PASS = "science";
+    const defaultDB = {
+      price: 0,
+      students: [],
+      schedules:{
+        "1AS":[["السبت","10:00 - 11:00"],["الثلاثاء","13:00 - 14:00"]],
+        "2AS":[["الأحد","11:00 - 12:00"],["الأربعاء","14:00 - 15:00"]],
+        "3AS":[["الإثنين","09:00 - 10:00"],["الخميس","15:00 - 16:00"]]
+      }
+    };
+
+    function loadDB(){
+      try{
+        const raw = localStorage.getItem(LS_KEY);
+        return raw? JSON.parse(raw) : structuredClone(defaultDB);
+      }catch(e){
+        return structuredClone(defaultDB);
+      }
+    }
+    function saveDB(){ localStorage.setItem(LS_KEY, JSON.stringify(DB)); }
+    let DB = loadDB();
+
+    const $ = (id)=>document.getElementById(id);
+    function uuid(){ return "S"+Math.random().toString(36).slice(2,9); }
+    function levelLabel(v){ return v==="1AS"?"أولى":(v==="2AS"?"ثانية":"ثالثة"); }
+
+    function registerStudent(){
+      const name = $("reg_name").value.trim();
+      const phone = $("reg_phone").value.trim();
+      const level = $("reg_level").value;
+      if(!name || !phone){ alert("أدخل الاسم ورقم الهاتف"); return; }
+      if(DB.students.find(s=>s.phone===phone)){ alert("رقم الهاتف مُسجل"); return; }
+      DB.students.push({id:uuid(),name,phone,level,active:false,sessions:0});
+      saveDB();
+      $("reg_name").value=""; $("reg_phone").value="";
+      alert("تم التسجيل — بانتظار التفعيل");
+      renderStudents(); refreshKPI();
+    }
+
+    function studentLogin(){
+      const phone = $("stu_login_phone").value.trim();
+      const s = DB.students.find(x=>x.phone===phone);
+      if(!s){ alert("لا يوجد طالب بهذا الرقم"); return; }
+      if(!s.active){ alert("لم يتم تفعيل حسابك بعد"); return; }
+      $("sv_name").innerText = s.name;
+      $("sv_phone").innerText = s.phone;
+      $("sv_level").innerText = levelLabel(s.level);
+      $("sv_sessions").innerText = s.sessions;
+      if(s.sessions>=8){ $("sv_due").classList.remove("hide"); } else { $("sv_due").classList.add("hide"); }
+      const tbody = $("sv_table"); tbody.innerHTML="";
+      (DB.schedules[s.level]||[]).forEach(row=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${row[0]}</td><td>${row[1]}</td>`;
+        tbody.appendChild(tr);
+      });
+      $("student_view").classList.remove("hide");
+    }
+
+    function adminLogin(){
+      const p = $("adm_pass").value;
+      if(p===PASS){ $("admin_panel").classList.remove("hide"); renderStudents(); renderScheduleEditor(); refreshKPI(); loadSettings(); }
+      else alert("كلمة المرور غير صحيحة");
+    }
+    function adminLogout(){ $("admin_panel").classList.add("hide"); }
+
+    function switchTab(el){
+      document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+      el.classList.add("active");
+      const tab = el.dataset.tab;
+      $("tab_students").classList.toggle("hide", tab!=="students");
+      $("tab_schedules").classList.toggle("hide", tab!=="schedules");
+      $("tab_settings").classList.toggle("hide", tab!=="settings");
+      if(tab==="students"){ renderStudents(); }
+      if(tab==="schedules"){ renderScheduleEditor(); }
+      if(tab==="settings"){ loadSettings(); }
+    }
+
+    function renderStudents(){
+      const q = $("search_q")?$("search_q").value.trim().toLowerCase():"";
+      const fl = $("filter_level")?$("filter_level").value:"";
+      const tbody = $("students_tbody"); if(!tbody) return;
+      tbody.innerHTML="";
+      DB.students
+        .filter(s=>!fl || s.level===fl)
+        .filter(s=> !q || s.name.toLowerCase().includes(q) || s.phone.includes(q))
+        .forEach(s=>{
+          const tr = document.createElement("tr");
+          const dueBadge = s.sessions>=8 ? `<span class="pill" style="background:#fff1f2;color:#b91c1c">8+</span>` : "";
+          tr.innerHTML = `
+            <td>${s.name}</td>
+            <td>${s.phone}</td>
+            <td>${levelLabel(s.level)}</td>
+            <td>${s.sessions} ${dueBadge}</td>
+            <td>${s.active? "مفعّل" : "معلّق"}</td>
+            <td class="row" style="justify-content:center">
+              <button class="btn ok" onclick="toggleActive('${s.id}')">${s.active?"إلغاء":"تفعيل"}</button>
+              <button class="btn flat" onclick="editSessions('${s.id}')">تعديل الحصص</button>
+              <button class="btn danger" onclick="deleteStudent('${s.id}')">حذف</button>
+            </td>`;
+          tbody.appendChild(tr);
+        });
+      refreshKPI();
+    }
+    function toggleActive(id){
+      const s = DB.students.find(x=>x.id===id); if(!s) return;
+      s.active = !s.active; saveDB(); renderStudents();
+    }
+    function editSessions(id){
+      const s = DB.students.find(x=>x.id===id); if(!s) return;
+      const v = prompt("عدد الحصص الجديد:", s.sessions);
+      if(v===null) return;
+      const n = parseInt(v,10);
+      if(!Number.isFinite(n) || n<0){ alert("قيمة غير صالحة"); return; }
+      s.sessions = n; saveDB(); renderStudents();
+    }
+    function deleteStudent(id){
+      if(!confirm("تأكيد حذف الطالب؟")) return;
+      DB.students = DB.students.filter(x=>x.id!==id); saveDB(); renderStudents();
+    }
+    function passSessionForLevel(){
+      const level = $("pass_level").value;
+      DB.students.forEach(s=>{ if(s.level===level && s.active) s.sessions++; });
+      saveDB(); renderStudents();
+      alert("تم تمرير حصة لجميع طلاب "+levelLabel(level));
+    }
+    function resetLevelCounters(){
+      const level = $("pass_level").value;
+      if(!confirm("تأكيد تصفير عدّاد "+levelLabel(level)+"؟")) return;
+      DB.students.forEach(s=>{ if(s.level===level) s.sessions=0; });
+      saveDB(); renderStudents();
+    }
+    function refreshKPI(){
+      const total = DB.students.length;
+      const active = DB.students.filter(s=>s.active).length;
+      const due = DB.students.filter(s=>s.sessions>=8).length;
+      $("k_total").innerText = total;
+      $("k_active").innerText = active;
+      $("k_due").innerText = due;
+    }
+
+    function renderScheduleEditor(){
+      const lvl = $("sched_level").value;
+      const tbody = $("sched_tbody"); tbody.innerHTML="";
+      (DB.schedules[lvl]||[]).forEach((row,i)=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${row[0]}</td><td>${row[1]}</td>
+          <td>
+            <button class="btn flat" onclick="editSlot(${i})">تعديل</button>
+            <button class="btn danger" onclick="deleteSlot(${i})">حذف</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+      saveDB();
+    }
+    function addSlot(){
+      const lvl = $("sched_level").value;
+      const d = $("new_day").value.trim();
+      const t = $("new_time").value.trim();
+      if(!d || !t){ alert("أدخل اليوم والساعة"); return; }
+      DB.schedules[lvl] = DB.schedules[lvl]||[];
+      DB.schedules[lvl].push([d,t]); $("new_day").value=""; $("new_time").value="";
+      renderScheduleEditor();
+    }
+    function deleteSlot(i){
+      const lvl = $("sched_level").value;
+      DB.schedules[lvl].splice(i,1);
+      renderScheduleEditor();
+    }
+    function editSlot(i){
+      const lvl = $("sched_level").value;
+      const cur = DB.schedules[lvl][i];
+      const nd = prompt("اليوم:", cur[0]); if(nd===null) return;
+      const nt = prompt("الساعة:", cur[1]); if(nt===null) return;
+      DB.schedules[lvl][i]=[nd.trim(),nt.trim()];
+      renderScheduleEditor();
+    }
+    function copySchedule(){
+      const from = $("sched_level").value;
+      const to = prompt("انسخ إلى أي مستوى؟ اكتب 1AS أو 2AS أو 3AS", from);
+      if(!to || !["1AS","2AS","3AS"].includes(to)) { alert("مستوى غير صحيح"); return; }
+      DB.schedules[to] = JSON.parse(JSON.stringify(DB.schedules[from]||[]));
+      alert("تم نسخ الجدول من "+levelLabel(from)+" إلى "+levelLabel(to));
+      saveDB();
+    }
+
+    function loadSettings(){ $("price_input").value = DB.price||0; }
+    function saveSettings(){ DB.price = Number($("price_input").value||0); saveDB(); alert("تم الحفظ"); }
+
+    function hardReset(){
+      if(!confirm("تحذير: سيؤدي لمسح جميع البيانات!")) return;
+      localStorage.removeItem(LS_KEY);
+      DB = loadDB();
+      renderStudents(); renderScheduleEditor(); refreshKPI();
+      alert("تمت إعادة التعيين.");
+    }
+  </script>
+</body>
+</html>
